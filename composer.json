@@ -5,13 +5,17 @@
   "license": "MIT",
   "authors": [
     {
+      "name": "ActiveDeveloppment",
+      "homepage": "https://actived.fr/"
+    },
+    {
       "name": "Houssem Guemer",
       "email": "houssem.guemer@gmail.com"
     }
   ],
   "support": {
-    "issues": "https://github.com/houssem-guemer/graphphp/issues",
-    "source": "https://github.com/houssem-guemer/graphphp"
+    "issues": "https://github.com/ActiveDevOrga/graphphp/issues",
+    "source": "https://github.com/ActiveDevOrga/graphphp"
   },
   "autoload": {
     "psr-4": {
