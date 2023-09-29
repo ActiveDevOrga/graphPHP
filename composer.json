@@ -1,0 +1,24 @@
+{
+  "name": "houssem-guemer/graphphp",
+  "description": "A PHP graph theory package.",
+  "version": "0.1.0",
+  "license": "MIT",
+  "authors": [
+    {
+      "name": "Houssem Guemer",
+      "email": "houssem.guemer@gmail.com"
+    }
+  ],
+  "support": {
+    "issues": "https://github.com/houssem-guemer/graphphp/issues",
+    "source": "https://github.com/houssem-guemer/graphphp"
+  },
+  "autoload": {
+    "psr-4": {
+      "GraphPHP\\": "src/"
+    }
+  },
+  "require": {
+    "php": ">=8.0"
+  }
+}
