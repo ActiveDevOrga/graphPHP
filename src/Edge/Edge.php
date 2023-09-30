@@ -11,13 +11,17 @@ class Edge
     protected Node $nodeB;
     private float $weight;
 
-    public function __construct(Node $nodeA, Node $nodeB, float $weight = 0.0) {
+    public function __construct(Node $nodeA, Node $nodeB, float $weight = 0.0, string $id = '') {
         $this->nodeA = $nodeA;
         $this->nodeB = $nodeB;
         $this->weight = $weight;
 
-        // Set the ID based on the node IDs
-        $this->id = $nodeA->getId() . '-' . $nodeB->getId();
+        if (empty($id)) {
+            // Set the ID based on the node IDs
+            $id = $nodeA->getId() . '-' . $nodeB->getId();
+        }
+
+        $this->id = $id;
     }
 
     public function getId(): string

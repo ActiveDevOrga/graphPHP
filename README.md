@@ -34,7 +34,7 @@ $graph->addNode($nodeA);
 ### Adding Edges
 ```php
 $nodeB = new Node('B');
-$edge = new Edge('A-B', $nodeA, $nodeB);
+$edge = new Edge($nodeA, $nodeB);
 $graph->addEdge($edge);
 ```
 
@@ -107,7 +107,7 @@ Only directed edges can be added to a directed graph:
 ```php
 $nodeA = new Node('A');
 $nodeB = new Node('B');
-$directedEdge = new DirectedEdge('A-B', $nodeA, $nodeB);
+$directedEdge = new DirectedEdge($nodeA, $nodeB);
 $diGraph->addEdge($directedEdge);
 ```
 
@@ -164,9 +164,9 @@ $nodeC = new Node('C');
 $graph->addNode($nodeA)
     ->addNode($nodeB)
     ->addNode($nodeC)
-    ->addEdge(new DirectedEdge('A-B', $nodeA, $nodeB, 4))
-    ->addEdge(new DirectedEdge('B-C', $nodeB, $nodeC, -6))
-    ->addEdge(new DirectedEdge('A-C', $nodeA, $nodeC, 2));
+    ->addEdge(new DirectedEdge($nodeA, $nodeB, 4))
+    ->addEdge(new DirectedEdge($nodeB, $nodeC, -6))
+    ->addEdge(new DirectedEdge($nodeA, $nodeC, 2));
 ```
 
 ### Transitive Reduction
