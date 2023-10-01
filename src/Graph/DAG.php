@@ -86,7 +86,7 @@ class DAG extends DiGraph
      * @param array $visited Array to keep track of visited nodes.
      * @param \SplStack $stack The stack to push the nodes in topological order.
      */
-    private function topologicalSortUtil(Node $node, array &$visited, \SplStack $stack): void
+    public function topologicalSortUtil(Node $node, array &$visited, \SplStack $stack): void
     {
         $visited[$node->getId()] = true;
 
@@ -106,10 +106,10 @@ class DAG extends DiGraph
      * @return void
      * @throws \Exception
      */
-    private function throwIfHasCycle(): void
+    public function throwIfHasCycle(): void
     {
         if ($this->hasCycle()) {
-            throw new \Exception("The graph contains a cycle and cannot be simplified using transitive reduction.");
+            throw new \Exception("The graph contains a cycle.");
         }
     }
 }
