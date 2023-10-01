@@ -17,6 +17,9 @@ class DiGraphTest extends TestCase
         $nodeA = new Node('A');
         $nodeB = new Node('B');
 
+        $graph->addNode($nodeA);
+        $graph->addNode($nodeB);
+
         // Testing with directed edge (should not throw exception)
         $directedEdge = new DirectedEdge($nodeA, $nodeB);
         $graph->addEdge($directedEdge);
@@ -32,6 +35,10 @@ class DiGraphTest extends TestCase
         $graph = new DiGraph();
         $nodeA = new Node('A');
         $nodeB = new Node('B');
+
+        $graph->addNode($nodeA);
+        $graph->addNode($nodeB);
+
         $edge = new DirectedEdge($nodeA, $nodeB);
         $graph->addEdge($edge);
 
@@ -45,6 +52,9 @@ class DiGraphTest extends TestCase
         $nodeA = new Node('A');
         $nodeB = new Node('B');
 
+        $graph->addNode($nodeA);
+        $graph->addNode($nodeB);
+
         $retrievedEdge = $graph->getEdge($nodeA, $nodeB);
         $this->assertNull($retrievedEdge);
     }
@@ -54,6 +64,10 @@ class DiGraphTest extends TestCase
         $graph = new DiGraph();
         $nodeA = new Node('A');
         $nodeB = new Node('B');
+
+        $graph->addNode($nodeA);
+        $graph->addNode($nodeB);
+
         $edge = new DirectedEdge($nodeA, $nodeB);
         $graph->addEdge($edge);
 
@@ -69,6 +83,11 @@ class DiGraphTest extends TestCase
         $nodeB = new Node('B');
         $nodeC = new Node('C');
         $nodeD = new Node('D');
+
+        $graph->addNode($nodeA);
+        $graph->addNode($nodeB);
+        $graph->addNode($nodeC);
+        $graph->addNode($nodeD);
 
         $graph->addEdge(new DirectedEdge($nodeA, $nodeC));
         $graph->addEdge(new DirectedEdge($nodeB, $nodeC));
