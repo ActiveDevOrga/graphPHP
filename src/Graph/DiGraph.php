@@ -34,6 +34,24 @@ class DiGraph extends Graph
     }
 
     /**
+     * Retrieves an edge between two given nodes.
+     *
+     * @param Node $nodeA Source node.
+     * @param Node $nodeB Target node.
+     * @return DirectedEdge|null Returns the edge if found, otherwise null.
+     */
+    public function getEdge(Node $nodeA, Node $nodeB): ?Edge
+    {
+        foreach ($this->edges as $edge) {
+            list($edgeNodeA, $edgeNodeB) = $edge->getNodes();
+            if ($edgeNodeA->getId() === $nodeA->getId() && $edgeNodeB->getId() === $nodeB->getId()) {
+                return $edge;
+            }
+        }
+        return null;
+    }
+
+    /**
      * Retrieves the outgoing neighbors (nodes reached by outgoing edges) of a given node.
      *
      * @param Node $node The node whose outgoing neighbors are to be retrieved.
@@ -69,6 +87,93 @@ class DiGraph extends Graph
         }
 
         return $predecessors;
+    }
+
+    /**
+     * Constructs and returns the adjacency matrix of the directed graph.
+     *
+     * @return array Returns the adjacency matrix.
+     */
+    public function getAdjacencyMatrix(): array
+    {
+        // Initialize the matrix with 'false'
+        $matrix = [];
+
+        // Populate the matrix
+        foreach ($this->nodes as $sourceId => $sourceNode) {
+            $matrix[$sourceId] = [];
+
+            foreach ($this->nodes as $targetId => $targetNode) {
+                // Initialize with 'false'
+                $matrix[$sourceId][$targetId] = false;
+
+                // Check if there's an edge from sourceNode to targetNode
+                $edge = $this->getEdgeById("$sourceId-$targetId");
+                if ($edge !== null) {
+                    $matrix[$sourceId][$targetId] = $edge->getWeight() ?? 0.0;
+                }
+            }
+        }
+
+        return $matrix;
+    }
+
+    /**
+     * Determines if the directed graph contains a cycle.
+     *
+     * @return bool Returns true if a cycle exists, otherwise false.
+     */
+    public function hasCycle(): bool
+    {
+        $visited = [];
+        $recursionStack = []; // Used to keep track of nodes in the current path
+
+        foreach ($this->nodes as $node) {
+            $visited[$node->getId()] = false;
+            $recursionStack[$node->getId()] = false;
+        }
+
+        foreach ($this->nodes as $node) {
+            if (!$visited[$node->getId()]) {
+                if ($this->dfsCycleCheckForDiGraph($node, $visited, $recursionStack)) {
+                    return true;
+                }
+            }
+        }
+
+        return false;
+    }
+
+    /**
+     * Depth First Search utility function to check for cycles in directed graph.
+     *
+     * @param Node $node The current node being visited.
+     * @param array $visited Array to keep track of visited nodes.
+     * @param array $recursionStack Array to keep track of nodes in the current path.
+     * @return bool Returns true if a cycle is detected, otherwise false.
+     */
+    public function dfsCycleCheckForDiGraph(Node $node, array &$visited, array &$recursionStack): bool
+    {
+        $nodeId = $node->getId();
+        $visited[$nodeId] = true;
+        $recursionStack[$nodeId] = true;
+
+        $neighbors = $this->getNeighbors($node);
+        foreach ($neighbors as $neighbor) {
+            $neighborId = $neighbor->getId();
+
+            if (!$visited[$neighborId]) {
+                if ($this->dfsCycleCheckForDiGraph($neighbor, $visited, $recursionStack)) {
+                    return true;
+                }
+            } elseif ($recursionStack[$neighborId]) {
+                // If the neighbor is in the recursion stack, a cycle is found
+                return true;
+            }
+        }
+
+        $recursionStack[$nodeId] = false; // Remove the node from the current path before returning
+        return false;
     }
 
     /**
@@ -151,110 +256,5 @@ class DiGraph extends Graph
             'path' => $path,
             'cost' => $result['distances'][$destination->getId()]
         ];
-    }
-
-    /**
-     * Constructs and returns the adjacency matrix of the directed graph.
-     *
-     * @return array Returns the adjacency matrix.
-     */
-    public function getAdjacencyMatrix(): array
-    {
-        // Initialize the matrix with 'false'
-        $matrix = [];
-
-        // Populate the matrix
-        foreach ($this->nodes as $sourceId => $sourceNode) {
-            $matrix[$sourceId] = [];
-
-            foreach ($this->nodes as $targetId => $targetNode) {
-                // Initialize with 'false'
-                $matrix[$sourceId][$targetId] = false;
-
-                // Check if there's an edge from sourceNode to targetNode
-                $edge = $this->getEdgeById("$sourceId-$targetId");
-                if ($edge !== null) {
-                    $matrix[$sourceId][$targetId] = $edge->getWeight() ?? 0.0;
-                }
-            }
-        }
-
-        return $matrix;
-    }
-
-    /**
-     * Determines if the directed graph contains a cycle.
-     *
-     * @return bool Returns true if a cycle exists, otherwise false.
-     */
-    public function hasCycle(): bool
-    {
-        $visited = [];
-        $recursionStack = []; // Used to keep track of nodes in the current path
-
-        foreach ($this->nodes as $node) {
-            $visited[$node->getId()] = false;
-            $recursionStack[$node->getId()] = false;
-        }
-
-        foreach ($this->nodes as $node) {
-            if (!$visited[$node->getId()]) {
-                if ($this->dfsCycleCheckForDiGraph($node, $visited, $recursionStack)) {
-                    return true;
-                }
-            }
-        }
-
-        return false;
-    }
-
-    /**
-     * Depth First Search utility function to check for cycles in directed graph.
-     *
-     * @param Node $node The current node being visited.
-     * @param array $visited Array to keep track of visited nodes.
-     * @param array $recursionStack Array to keep track of nodes in the current path.
-     * @return bool Returns true if a cycle is detected, otherwise false.
-     */
-    private function dfsCycleCheckForDiGraph(Node $node, array &$visited, array &$recursionStack): bool
-    {
-        $nodeId = $node->getId();
-        $visited[$nodeId] = true;
-        $recursionStack[$nodeId] = true;
-
-        $neighbors = $this->getNeighbors($node);
-        foreach ($neighbors as $neighbor) {
-            $neighborId = $neighbor->getId();
-
-            if (!$visited[$neighborId]) {
-                if ($this->dfsCycleCheckForDiGraph($neighbor, $visited, $recursionStack)) {
-                    return true;
-                }
-            } elseif ($recursionStack[$neighborId]) {
-                // If the neighbor is in the recursion stack, a cycle is found
-                return true;
-            }
-        }
-
-        $recursionStack[$nodeId] = false; // Remove the node from the current path before returning
-        return false;
-    }
-
-    /**
-     * Retrieves an edge between two given nodes.
-     *
-     * @param Node $nodeA Source node.
-     * @param Node $nodeB Target node.
-     * @return DirectedEdge|null Returns the edge if found, otherwise null.
-     */
-    protected function getEdge(Node $nodeA, Node $nodeB): ?Edge
-    {
-        foreach ($this->edges as $edge) {
-            list($edgeNodeA, $edgeNodeB) = $edge->getNodes();
-            if ($edgeNodeA->getId() === $nodeA->getId() && $edgeNodeB->getId() === $nodeB->getId()) {
-                return $edge;
-            }
-        }
-        return null;
     }
 }
